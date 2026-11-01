@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายชื่อผู้เช่า - ระบบหอพัก</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
+        .card { border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; padding: 1.25rem; }
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 fw-bold"><i class="fa-solid fa-users me-2"></i>จัดการรายชื่อผู้เช่าและสถานะการชำระ</h4>
+                        <button class="btn btn-light btn-sm fw-bold text-primary" onclick="addTenantModal()">
+                            <i class="fa-solid fa-user-plus me-1"></i>เพิ่มผู้เช่าใหม่
+                        </button>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>บ้านเลขที่</th>
+                                        <th>ชื่อผู้เช่า</th>
+                                        <th>ค่าเช่า/เดือน</th>
+                                        <th>สถานะ</th>
+                                        <th>วันที่ออกบิล / กำหนดชำระ</th>
+                                        <th>ค่าปรับเรียลไทม์</th>
+                                        <th class="text-center">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tenantsTableBody">
+                                    <tr><td colspan="7" class="text-center text-muted py-4">กำลังโหลดข้อมูล...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        fetch('navbar.html').then(res => res.text()).then(html => { document.getElementById('navbar-placeholder').innerHTML = html; });
+
+        async function loadTenants() {
+            try {
+                const res = await fetch('/api/tenants');
+                const result = await res.json();
+                const tbody = document.getElementById('tenantsTableBody');
+
+                if (result.success && result.tenants.length > 0) {
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+
+                    tbody.innerHTML = result.tenants.map(t => {
+                        let statusBadge = '';
+                        if (t.status === 'ชำระแล้ว') {
+                            statusBadge = `<span class="badge bg-success" style="cursor:pointer;" onclick="toggleStatus(${t.id}, 'ค้างชำระ')">ชำระแล้ว (คลิกเปลี่ยน)</span>`;
+                        } else {
+                            statusBadge = `<span class="badge bg-danger" style="cursor:pointer;" onclick="toggleStatus(${t.id}, 'ชำระแล้ว')">ค้างชำระ (คลิกเปลี่ยน)</span>`;
+                        }
+
+                        let billInfo = '-';
+                        let fineInfo = '-';
+
+                        if (t.bill_date || t.due_date) {
+                            const billDateStr = t.bill_date ? new Date(t.bill_date).toLocaleDateString('th-TH') : '-';
+                            const dueDateStr = t.due_date ? new Date(t.due_date).toLocaleDateString('th-TH') : '-';
+                            billInfo = `<small>ออกบิล: ${billDateStr}<br>กำหนด: ${dueDateStr}</small>`;
+
+                            if (t.due_date && t.status !== 'ชำระแล้ว') {
+                                const dueDate = new Date(t.due_date);
+                                dueDate.setHours(0,0,0,0);
+                                const diffTime = today - dueDate;
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                                if (diffDays > 0) {
+                                    const totalFine = diffDays * (Number(t.fine_rate) || 0);
+                                    fineInfo = `<span class="text-danger fw-bold">เกิน ${diffDays} วัน<br>ค่าปรับ: ${totalFine.toLocaleString()} บาท</span>`;
+                                } else {
+                                    fineInfo = `<span class="text-muted">ยังไม่เกินกำหนด</span>`;
+                                }
+                            }
+                        }
+
+                        return `
+                            <tr>
+                                <td class="fw-bold">${t.house_no}</td>
+                                <td>${t.tenant_name}<br><small class="text-muted">${t.phone || ''}</small></td>
+                                <td>${Number(t.room_rent).toLocaleString()} บาท</td>
+                                <td>${statusBadge}</td>
+                                <td>${billInfo}</td>
+                                <td>${fineInfo}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteTenant(${t.id})"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">ยังไม่มีข้อมูลผู้เช่า</td></tr>`;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // ฟังก์ชันสลับสถานะชำระแล้ว / ค้างชำระ
+        async function toggleStatus(id, newStatus) {
+            await fetch(`/api/tenants/status/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            loadTenants();
+        }
+
+        function addTenantModal() {
+            Swal.fire({
+                title: 'เพิ่มผู้เช่าใหม่',
+                html: `
+                    <input id="swal-house" class="swal2-input" placeholder="บ้านเลขที่">
+                    <input id="swal-name" class="swal2-input" placeholder="ชื่อ-นามสกุล">
+                    <input id="swal-phone" class="swal2-input" placeholder="เบอร์โทรศัพท์">
+                    <input id="swal-rent" type="number" class="swal2-input" placeholder="ค่าเช่า/เดือน (บาท)" value="3500">
+                    <select id="swal-status" class="swal2-input">
+                        <option value="รอชำระ">รอชำระ</option>
+                        <option value="ชำระแล้ว">ชำระแล้ว</option>
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                preConfirm: () => {
+                    return {
+                        houseNo: document.getElementById('swal-house').value,
+                        tenantName: document.getElementById('swal-name').value,
+                        phone: document.getElementById('swal-phone').value,
+                        roomRent: document.getElementById('swal-rent').value,
+                        status: document.getElementById('swal-status').value
+                    }
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed && result.value.houseNo) {
+                    await fetch('/api/tenants', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(result.value)
+                    });
+                    Swal.fire('สำเร็จ', 'บันทึกข้อมูลเรียบร้อย', 'success');
+                    loadTenants();
+                }
+            });
+        }
+
+        async function deleteTenant(id) {
+            if (confirm('คุณต้องการลบรายชื่อนี้ใช่หรือไม่?')) {
+                await fetch(`/api/tenants/${id}`, { method: 'DELETE' });
+                loadTenants();
+            }
+        }
+
+        loadTenants();
+    </script>
+</body>
+</html>

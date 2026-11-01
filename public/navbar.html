@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-4" href="index.html">
+            <i class="fa-solid fa-house-chimney me-2"></i>Dorm Management
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto fs-6">
+                <li class="nav-item me-2">
+                    <a class="nav-link rounded px-3" id="nav-index" href="index.html">
+                        <i class="fa-solid fa-file-invoice-dollar me-1"></i> ออกบิลประจำเดือน
+                    </a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link rounded px-3" id="nav-fine" href="fine-bill.html">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> บิลค่าปรับ
+                    </a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link rounded px-3" id="nav-payment" href="payment.html">
+                        <i class="fa-solid fa-credit-card me-1"></i> ช่องทางชำระเงิน
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link rounded px-3" id="nav-tenants" href="tenants.html">
+                        <i class="fa-solid fa-users me-1"></i> รายชื่อผู้เช่า
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .navbar {
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%) !important;
+    }
+    .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        transition: all 0.3s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const path = window.location.pathname;
+        if (path.includes('payment.html')) {
+            document.getElementById('nav-payment')?.classList.add('active');
+        } else if (path.includes('tenants.html')) {
+            document.getElementById('nav-tenants')?.classList.add('active');
+        } else if (path.includes('fine-bill.html')) {
+            document.getElementById('nav-fine')?.classList.add('active');
+        } else {
+            document.getElementById('nav-index')?.classList.add('active');
+        }
+    });
+</script>
