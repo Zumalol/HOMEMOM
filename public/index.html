@@ -9,32 +9,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-        .card { border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
-        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; padding: 1.25rem; }
-        .form-control, .form-select { border-radius: 0.5rem; padding: 0.75rem 1rem; border: 1px solid #ced4da; }
-        .section-title { font-weight: 600; color: #495057; font-size: 1.1rem; border-left: 4px solid #0d6efd; padding-left: 10px; margin-top: 1.5rem; margin-bottom: 1rem; }
-        .btn-submit { padding: 0.85rem; font-weight: 600; font-size: 1.1rem; border-radius: 0.5rem; background: linear-gradient(135deg, #198754 0%, #157347 100%); border: none; }
-        .other-fee-row { background-color: #f8f9fa; padding: 12px; border-radius: 0.5rem; border: 1px dashed #ced4da; margin-bottom: 10px; }
-        .fine-section { background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 0.5rem; padding: 15px; margin-bottom: 1rem; }
+        body { font-family: 'Prompt', sans-serif; background: #f0f4f8; min-height: 100vh; }
+        .card { border: none; border-radius: 1.25rem; box-shadow: 0 8px 24px rgba(149, 157, 165, 0.15); }
+        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1.25rem !important; border-top-right-radius: 1.25rem !important; padding: 1.5rem 1rem; }
+        .form-control, .form-select { border-radius: 0.65rem; padding: 0.75rem 1rem; border: 1px solid #dce2e6; font-size: 0.95rem; }
+        .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15); }
+        .section-title { font-weight: 600; color: #334155; font-size: 1.05rem; border-left: 4px solid #0d6efd; padding-left: 10px; margin-top: 1.5rem; margin-bottom: 1rem; }
+        .btn-submit { padding: 0.9rem; font-weight: 600; font-size: 1.05rem; border-radius: 0.65rem; background: linear-gradient(135deg, #198754 0%, #157347 100%); border: none; }
+        .other-fee-row { background-color: #f8fafc; padding: 12px; border-radius: 0.75rem; border: 1px dashed #cbd5e1; margin-bottom: 10px; }
+        .fine-section { background-color: #fffbe6; border: 1px solid #ffe58f; border-radius: 0.75rem; padding: 15px; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
 
-    <div class="container py-4">
+    <div class="container py-3 py-md-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
+            <div class="col-lg-8 col-md-10 px-2 px-sm-3">
                 <div class="card">
                     <div class="card-header text-center">
-                        <h3 class="mb-1 fw-bold"><i class="fa-solid fa-calculator me-2"></i>สรุปบิลค่าใช้จ่ายประจำเดือน</h3>
-                        <p class="mb-0 text-white-50">เลือกบ้านเลขที่จากระบบ และคำนวณบิลส่งผู้เช่า</p>
+                        <h3 class="mb-1 fw-bold fs-4 fs-md-3"><i class="fa-solid fa-calculator me-2"></i>สรุปบิลค่าใช้จ่ายประจำเดือน</h3>
+                        <p class="mb-0 text-white-50 small">เลือกบ้านเลขที่จากระบบ และคำนวณบิลส่งผู้เช่า</p>
                     </div>
-                    <div class="card-body p-4 p-md-5">
+                    <div class="card-body p-3 p-md-5">
                         <form id="billingForm">
                             <div class="section-title">ข้อมูลบ้านเลขที่และผู้เช่า</div>
                             <div class="row g-3 mb-3">
-                                <div class="col-md-12">
+                                <div class="col-12">
                                     <label class="form-label fw-medium">บ้านเลขที่ <span class="text-danger">*</span></label>
                                     <select class="form-select" id="houseNoSelect" required>
                                         <option value="">-- กำลังโหลดรายชื่อผู้เช่า --</option>
@@ -42,19 +43,19 @@
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <label class="form-label fw-medium">ชื่อผู้เช่า</label>
                                     <input type="text" class="form-control bg-light" id="tenantName" readonly placeholder="เลือกบ้านเลขเพื่อแสดงชื่อ">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <label class="form-label fw-medium">ค่าเช่าบ้าน / ค่าห้อง (บาท)</label>
-                                    <input type="number" class="form-control" id="roomRent" placeholder="เช่น 3500" required>
+                                    <input type="number" class="form-control" id="roomRent" value="3500" required>
                                 </div>
                             </div>
 
                             <div class="section-title">⚡️ ข้อมูลค่าไฟฟ้า</div>
                             <div class="row g-3 mb-3">
-                                <div class="col-md-12">
+                                <div class="col-12">
                                     <label class="form-label fw-medium">ค่าไฟฟ้า (บาท) <span class="text-danger">*</span></label>
                                     <input type="number" class="form-control" id="elecAmount" placeholder="เช่น 850" required>
                                 </div>
@@ -62,54 +63,54 @@
 
                             <div class="section-title">💧 ค่าน้ำประปา</div>
                             <div class="row g-3 mb-3">
-                                <div class="col-md-12">
+                                <div class="col-12">
                                     <label class="form-label fw-medium">ค่าน้ำประปา (บาท) <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="waterRent" placeholder="เช่น 50" required>
+                                    <input type="number" class="form-control" id="waterRent" placeholder="เช่น 150" required>
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center section-title mb-2">
-                                <span>📌 ค่าใช้จ่ายอื่นๆ (ถ้ามี / ไม่บังคับ)</span>
-                                <button type="button" class="btn btn-outline-primary btn-sm" id="addFeeBtn">
-                                    <i class="fa-solid fa-plus"></i> เพิ่มรายการ
+                                <span>📌 ค่าใช้จ่ายอื่นๆ (ถ้ามี)</span>
+                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="addFeeBtn">
+                                    <i class="fa-solid fa-plus me-1"></i>เพิ่มรายการ
                                 </button>
                             </div>
                             <div id="otherFeesContainer" class="mb-4">
                                 <div class="row g-2 align-items-center other-fee-row fee-item">
-                                    <div class="col-md-7 col-6">
-                                        <input type="text" class="form-control fee-name" placeholder="ชื่อรายการ เช่น ค่าส่วนกลาง">
+                                    <div class="col-6">
+                                        <input type="text" class="form-control fee-name" placeholder="ชื่อ เช่น ค่าส่วนกลาง">
                                     </div>
-                                    <div class="col-md-4 col-5">
-                                        <input type="number" class="form-control fee-amount" placeholder="จำนวนเงิน (บาท)">
+                                    <div class="col-4">
+                                        <input type="number" class="form-control fee-amount" placeholder="บาท">
                                     </div>
-                                    <div class="col-md-1 col-1 text-center">
-                                        <button type="button" class="btn btn-outline-danger btn-sm remove-fee-btn"><i class="fa-solid fa-trash"></i></button>
+                                    <div class="col-2 text-center">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-fee-btn rounded-circle"><i class="fa-solid fa-trash"></i></button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="section-title">⚠️ ค่าปรับหากเกินกำหนด (ไม่บังคับ)</div>
                             <div class="fine-section">
-                                <div class="form-check mb-3">
+                                <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" id="enableFine" style="width: 20px; height: 20px; cursor: pointer;">
                                     <label class="form-check-label fw-bold ms-2 mt-1" for="enableFine" style="cursor: pointer;">
                                         เปิดใช้งานเงื่อนไขค่าปรับเกินกำหนด
                                     </label>
                                 </div>
-                                <div id="fineDetails" style="display: none;" class="row g-3">
-                                    <div class="col-md-6">
+                                <div id="fineDetails" style="display: none;" class="row g-3 mt-1">
+                                    <div class="col-md-6 col-12">
                                         <label class="form-label fw-medium">กำหนดชำระภายในวันที่</label>
                                         <input type="date" class="form-control bg-white" id="dueDate">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-medium">อัตราค่าปรับ (เช่น 100 บาทต่อวัน)</label>
+                                    <div class="col-md-6 col-12">
+                                        <label class="form-label fw-medium">อัตราค่าปรับ</label>
                                         <input type="text" class="form-control bg-white" id="fineText" placeholder="เช่น 100 บาทต่อวัน">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="d-grid mt-4">
-                                <button type="submit" class="btn btn-submit text-white" id="submitBtn">
+                                <button type="submit" class="btn btn-submit text-white shadow-sm" id="submitBtn">
                                     🚀 สรุปยอดและคัดลอกข้อความ
                                 </button>
                             </div>
@@ -166,9 +167,9 @@
             const newRow = document.createElement('div');
             newRow.className = 'row g-2 align-items-center other-fee-row fee-item';
             newRow.innerHTML = `
-                <div class="col-md-7 col-6"><input type="text" class="form-control fee-name" placeholder="ชื่อรายการ เช่น ค่าส่วนกลาง"></div>
-                <div class="col-md-4 col-5"><input type="number" class="form-control fee-amount" placeholder="จำนวนเงิน (บาท)"></div>
-                <div class="col-md-1 col-1 text-center"><button type="button" class="btn btn-outline-danger btn-sm remove-fee-btn"><i class="fa-solid fa-trash"></i></button></div>
+                <div class="col-6"><input type="text" class="form-control fee-name" placeholder="ชื่อ เช่น ค่าส่วนกลาง"></div>
+                <div class="col-4"><input type="number" class="form-control fee-amount" placeholder="บาท"></div>
+                <div class="col-2 text-center"><button type="button" class="btn btn-outline-danger btn-sm remove-fee-btn rounded-circle"><i class="fa-solid fa-trash"></i></button></div>
             `;
             container.appendChild(newRow);
         });
@@ -192,7 +193,7 @@
             });
 
             const enableFine = document.getElementById('enableFine').checked;
-            const rawDate = document.getElementById('dueDate').value; // YYYY-MM-DD
+            const rawDate = document.getElementById('dueDate').value;
 
             const formData = {
                 houseNo: document.getElementById('houseNoSelect').value,
@@ -220,7 +221,7 @@
                         html: `
                             <p class="text-muted small mb-2">คัดลอกข้อความด้านล่างนี้ไปส่งทางแชทได้เลยครับ 👇</p>
                             <textarea id="copyTextarea" class="form-control mb-3" rows="8" readonly style="font-size: 13px;">${result.messageText}</textarea>
-                            <div class="d-grid"><button id="copyBtn" class="btn btn-primary"><i class="fa-solid fa-copy"></i> คัดลอกข้อความ</button></div>
+                            <div class="d-grid"><button id="copyBtn" class="btn btn-primary btn-lg fs-6"><i class="fa-solid fa-copy me-1"></i> คัดลอกข้อความ</button></div>
                         `,
                         showConfirmButton: false, showCloseButton: true
                     });

@@ -9,41 +9,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-        .card { border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
-        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; padding: 1.25rem; }
-        .table-hover tbody tr:hover { background-color: rgba(13, 110, 253, 0.03); }
-        .badge { font-weight: 500; padding: 0.5em 0.8em; }
+        body { font-family: 'Prompt', sans-serif; background: #f0f4f8; min-height: 100vh; }
+        .card { border: none; border-radius: 1.25rem; box-shadow: 0 8px 24px rgba(149, 157, 165, 0.15); }
+        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1.25rem !important; border-top-right-radius: 1.25rem !important; padding: 1.25rem 1rem; }
+        .badge { font-weight: 500; padding: 0.5em 0.8em; font-size: 0.8rem; }
+        .table-responsive { border-radius: 0.75rem; }
     </style>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
 
-    <div class="container py-4">
+    <div class="container py-3 py-md-5">
         <div class="row justify-content-center">
-            <div class="col-lg-11">
+            <div class="col-lg-11 px-2 px-sm-3">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0 fw-bold"><i class="fa-solid fa-users me-2"></i>จัดการรายชื่อผู้เช่าและสถานะการชำระ</h4>
-                        <button class="btn btn-light btn-sm fw-bold text-primary shadow-sm px-3" onclick="addTenantModal()">
-                            <i class="fa-solid fa-user-plus me-1"></i>เพิ่มผู้เช่าใหม่
+                    <div class="card-header d-flex flex-row justify-content-between align-items-center">
+                        <h4 class="mb-0 fw-bold fs-5 fs-md-4"><i class="fa-solid fa-users me-2"></i>รายชื่อผู้เช่า</h4>
+                        <button class="btn btn-light btn-sm fw-bold text-primary rounded-pill px-3 shadow-sm" onclick="addTenantModal()">
+                            <i class="fa-solid fa-user-plus me-1"></i>เพิ่มผู้เช่า
                         </button>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-2 p-md-4">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
-                                    <tr>
+                                    <tr class="small text-muted">
                                         <th>บ้านเลขที่</th>
                                         <th>ชื่อผู้เช่า</th>
-                                        <th>ค่าเช่า/เดือน</th>
+                                        <th>ค่าเช่า</th>
                                         <th>สถานะ</th>
-                                        <th>วันที่ออกบิล / กำหนดชำระ</th>
-                                        <th>ค่าปรับเรียลไทม์</th>
+                                        <th>การออกบิล</th>
+                                        <th>ค่าปรับ</th>
                                         <th class="text-center">จัดการ</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tenantsTableBody">
+                                <tbody id="tenantsTableBody" class="small">
                                     <tr><td colspan="7" class="text-center text-muted py-4">กำลังโหลดข้อมูล...</td></tr>
                                 </tbody>
                             </table>
@@ -75,9 +75,9 @@
                     tbody.innerHTML = tenantsList.map(t => {
                         let statusBadge = '';
                         if (t.status === 'ชำระแล้ว') {
-                            statusBadge = `<span class="badge bg-success rounded-pill shadow-sm" style="cursor:pointer;" onclick="toggleStatus(${t.id}, 'ค้างชำระ')" title="คลิกเพื่อเปลี่ยนเป็นค้างชำระ"><i class="fa-solid fa-circle-check me-1"></i>ชำระแล้ว</span>`;
+                            statusBadge = `<span class="badge bg-success rounded-pill shadow-sm" style="cursor:pointer;" onclick="toggleStatus(${t.id}, 'ค้างชำระ')" title="คลิกเพื่อสลับสถานะ"><i class="fa-solid fa-circle-check me-1"></i>ชำระแล้ว</span>`;
                         } else {
-                            statusBadge = `<span class="badge bg-danger rounded-pill shadow-sm" style="cursor:pointer;" onclick="toggleStatus(${t.id}, 'ชำระแล้ว')" title="คลิกเพื่อเปลี่ยนเป็นชำระแล้ว"><i class="fa-solid fa-clock-rotate-left me-1"></i>ค้างชำระ</span>`;
+                            statusBadge = `<span class="badge bg-danger rounded-pill shadow-sm" style="cursor:pointer;" onclick="toggleStatus(${t.id}, 'ชำระแล้ว')" title="คลิกเพื่อสลับสถานะ"><i class="fa-solid fa-clock-rotate-left me-1"></i>ค้างชำระ</span>`;
                         }
 
                         let billInfo = '<span class="text-muted">-</span>';
@@ -86,7 +86,7 @@
                         if (t.bill_date || t.due_date) {
                             const billDateStr = t.bill_date ? new Date(t.bill_date).toLocaleDateString('th-TH') : '-';
                             const dueDateStr = t.due_date ? new Date(t.due_date).toLocaleDateString('th-TH') : '-';
-                            billInfo = `<small class="text-dark">ออกบิล: ${billDateStr}<br>กำหนด: ${dueDateStr}</small>`;
+                            billInfo = `<div class="lh-sm"><small class="text-dark">บิล: ${billDateStr}<br>ครบ: ${dueDateStr}</small></div>`;
 
                             if (t.due_date && t.status !== 'ชำระแล้ว') {
                                 const dueDate = new Date(t.due_date);
@@ -96,9 +96,9 @@
 
                                 if (diffDays > 0) {
                                     const totalFine = diffDays * (Number(t.fine_rate) || 0);
-                                    fineInfo = `<span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i>เกิน ${diffDays} วัน<br>ค่าปรับ: ${totalFine.toLocaleString()} บาท</span>`;
+                                    fineInfo = `<span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i>เกิน ${diffDays} วัน<br>ปรับ ${totalFine.toLocaleString()} บ.</span>`;
                                 } else {
-                                    fineInfo = `<small class="text-success fw-medium">ยังไม่เกินกำหนด</small>`;
+                                    fineInfo = `<span class="text-success fw-medium">ปกติ</span>`;
                                 }
                             }
                         }
@@ -106,14 +106,19 @@
                         return `
                             <tr>
                                 <td class="fw-bold text-primary">${t.house_no}</td>
-                                <td><div class="fw-semibold">${t.tenant_name}</div><small class="text-muted"><i class="fa-solid fa-phone me-1"></i>${t.phone || 'ไม่มีเบอร์โทร'}</small></td>
-                                <td class="fw-medium">${Number(t.room_rent).toLocaleString()} บาท</td>
+                                <td>
+                                    <div class="fw-semibold text-dark">${t.tenant_name}</div>
+                                    <small class="text-muted"><i class="fa-solid fa-phone me-1"></i>${t.phone || '-'}</small>
+                                </td>
+                                <td class="fw-medium">${Number(t.room_rent).toLocaleString()}</td>
                                 <td>${statusBadge}</td>
                                 <td>${billInfo}</td>
                                 <td>${fineInfo}</td>
                                 <td class="text-center">
-                                    <button class="btn btn-outline-warning btn-sm me-1 shadow-sm" onclick="editTenantModal(${t.id})" title="แก้ไขข้อมูล"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-outline-danger btn-sm shadow-sm" onclick="deleteTenant(${t.id})" title="ลบข้อมูล"><i class="fa-solid fa-trash"></i></button>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <button class="btn btn-outline-warning btn-sm px-2 rounded-3" onclick="editTenantModal(${t.id})" title="แก้ไข"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        <button class="btn btn-outline-danger btn-sm px-2 rounded-3" onclick="deleteTenant(${t.id})" title="ลบ"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -126,7 +131,6 @@
             }
         }
 
-        // ฟังก์ชันสลับสถานะชำระแล้ว / ค้างชำระ
         async function toggleStatus(id, newStatus) {
             await fetch(`/api/tenants/status/${id}`, {
                 method: 'PUT',
@@ -136,22 +140,22 @@
             loadTenants();
         }
 
-        // Modal เพิ่มผู้เช่าใหม่ (ค่าเริ่มต้นสถานะเป็น "ชำระแล้ว")
+        // เพิ่มผู้เช่าใหม่ (ไม่มีช่องเลือกสถานะ -> ตั้งเป็น "ชำระแล้ว" อัตโนมัติ)
         function addTenantModal() {
             Swal.fire({
-                title: '<h3 class="fw-bold text-primary"><i class="fa-solid fa-user-plus me-2"></i>เพิ่มผู้เช่าใหม่</h3>',
+                title: '<h4 class="fw-bold text-primary"><i class="fa-solid fa-user-plus me-2"></i>เพิ่มผู้เช่าใหม่</h4>',
                 html: `
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">บ้านเลขที่</label></div>
-                    <input id="swal-house" class="swal2-input mt-0 mb-3" placeholder="เช่น 101/5">
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">ชื่อ-นามสกุล</label></div>
-                    <input id="swal-name" class="swal2-input mt-0 mb-3" placeholder="ชื่อผู้เช่า">
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">เบอร์โทรศัพท์</label></div>
-                    <input id="swal-phone" class="swal2-input mt-0 mb-3" placeholder="089-123-4567">
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">ค่าเช่า/เดือน (บาท)</label></div>
-                    <input id="swal-rent" type="number" class="swal2-input mt-0 mb-2" value="3500">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">บ้านเลขที่</label></div>
+                    <input id="swal-house" class="form-control mb-3" placeholder="เช่น 101/5">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">ชื่อ-นามสกุล</label></div>
+                    <input id="swal-name" class="form-control mb-3" placeholder="ชื่อผู้เช่า">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">เบอร์โทรศัพท์</label></div>
+                    <input id="swal-phone" class="form-control mb-3" placeholder="089-123-4567">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">ค่าเช่า/เดือน (บาท)</label></div>
+                    <input id="swal-rent" type="number" class="form-control mb-2" placeholder="เช่น 3500">
                 `,
                 showCancelButton: true,
-                confirmButtonText: '<i class="fa-solid fa-check me-1"></i> บันทึก',
+                confirmButtonText: 'บันทึก',
                 cancelButtonText: 'ยกเลิก',
                 confirmButtonColor: '#0d6efd',
                 preConfirm: () => {
@@ -160,7 +164,7 @@
                         tenantName: document.getElementById('swal-name').value,
                         phone: document.getElementById('swal-phone').value,
                         roomRent: document.getElementById('swal-rent').value,
-                        status: 'ชำระแล้ว' // ตั้งค่าเริ่มต้นเป็นชำระแล้ว
+                        status: 'ชำระแล้ว'
                     }
                 }
             }).then(async (result) => {
@@ -173,30 +177,30 @@
                     Swal.fire({ icon: 'success', title: 'สำเร็จ', text: 'บันทึกข้อมูลเรียบร้อย', timer: 1500, showConfirmButton: false });
                     loadTenants();
                 } else if (result.isConfirmed) {
-                    Swal.fire('แจ้งเตือน', 'กรุณากรอกบ้านเลขที่และชื่อผู้เช่า', 'warning');
+                    Swal.fire('แจ้งเตือน', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
                 }
             });
         }
 
-        // Modal แก้ไขข้อมูลผู้เช่า
+        // แก้ไขผู้เช่า
         function editTenantModal(id) {
             const tenant = tenantsList.find(t => t.id === id);
             if (!tenant) return;
 
             Swal.fire({
-                title: '<h3 class="fw-bold text-warning"><i class="fa-solid fa-pen-to-square me-2"></i>แก้ไขข้อมูลผู้เช่า</h3>',
+                title: '<h4 class="fw-bold text-warning"><i class="fa-solid fa-pen-to-square me-2"></i>แก้ไขข้อมูลผู้เช่า</h4>',
                 html: `
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">บ้านเลขที่</label></div>
-                    <input id="swal-edit-house" class="swal2-input mt-0 mb-3" value="${tenant.house_no}">
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">ชื่อ-นามสกุล</label></div>
-                    <input id="swal-edit-name" class="swal2-input mt-0 mb-3" value="${tenant.tenant_name}">
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">เบอร์โทรศัพท์</label></div>
-                    <input id="swal-edit-phone" class="swal2-input mt-0 mb-3" value="${tenant.phone || ''}">
-                    <div class="text-start mb-2"><label class="form-label fw-bold small">ค่าเช่า/เดือน (บาท)</label></div>
-                    <input id="swal-edit-rent" type="number" class="swal2-input mt-0 mb-2" value="${tenant.room_rent}">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">บ้านเลขที่</label></div>
+                    <input id="swal-edit-house" class="form-control mb-3" value="${tenant.house_no}">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">ชื่อ-นามสกุล</label></div>
+                    <input id="swal-edit-name" class="form-control mb-3" value="${tenant.tenant_name}">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">เบอร์โทรศัพท์</label></div>
+                    <input id="swal-edit-phone" class="form-control mb-3" value="${tenant.phone || ''}">
+                    <div class="text-start mb-1"><label class="form-label fw-bold small">ค่าเช่า/เดือน (บาท)</label></div>
+                    <input id="swal-edit-rent" type="number" class="form-control mb-2" value="${tenant.room_rent}">
                 `,
                 showCancelButton: true,
-                confirmButtonText: '<i class="fa-solid fa-save me-1"></i> บันทึกการแก้ไข',
+                confirmButtonText: 'บันทึกแก้ไข',
                 cancelButtonText: 'ยกเลิก',
                 confirmButtonColor: '#ffc107',
                 preConfirm: () => {
@@ -205,7 +209,7 @@
                         tenantName: document.getElementById('swal-edit-name').value,
                         phone: document.getElementById('swal-edit-phone').value,
                         roomRent: document.getElementById('swal-edit-rent').value,
-                        status: tenant.status // คงสถานะเดิมไว้
+                        status: tenant.status
                     }
                 }
             }).then(async (result) => {
@@ -223,13 +227,12 @@
 
         async function deleteTenant(id) {
             Swal.fire({
-                title: 'คุณแน่ใจหรือไม่?',
-                text: "ต้องการลบรายชื่อผู้เชูานี้ออกจากระบบ?",
+                title: 'ยืนยันการลบ?',
+                text: "ต้องการลบรายชื่อผู้เช่านี้ออกจากระบบหรือไม่",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc3545',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'ใช่, ลบเลย',
+                confirmButtonText: 'ลบ',
                 cancelButtonText: 'ยกเลิก'
             }).then(async (result) => {
                 if (result.isConfirmed) {

@@ -9,31 +9,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Prompt', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-        .card { border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
-        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; padding: 1.25rem; }
-        .payment-card { border: 2px solid #dee2e6; border-radius: 0.75rem; transition: all 0.3s; background: #fff; position: relative; }
-        .payment-card.active-main { border-color: #198754; background-color: #f4fcf7; box-shadow: 0 5px 15px rgba(25, 135, 84, 0.15); }
-        .badge-active { position: absolute; top: 15px; right: 15px; }
+        body { font-family: 'Prompt', sans-serif; background: #f0f4f8; min-height: 100vh; }
+        .card { border: none; border-radius: 1.25rem; box-shadow: 0 8px 24px rgba(149, 157, 165, 0.15); }
+        .card-header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border-top-left-radius: 1.25rem !important; border-top-right-radius: 1.25rem !important; padding: 1.25rem 1rem; }
+        .payment-card { border: 2px solid #e2e8f0; border-radius: 1rem; transition: all 0.25s ease; background: #fff; position: relative; }
+        .payment-card.active-main { border-color: #198754; background-color: #f0fdf4; box-shadow: 0 4px 12px rgba(25, 135, 84, 0.12); }
+        .badge-active { position: absolute; top: 15px; right: 15px; font-size: 0.75rem; }
     </style>
 </head>
 <body>
     <div id="navbar-placeholder"></div>
 
-    <div class="container py-4">
+    <div class="container py-3 py-md-5">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-10 px-2 px-sm-3">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0 fw-bold"><i class="fa-solid fa-wallet me-2"></i>จัดการช่องทางชำระเงิน</h4>
-                        <button class="btn btn-light btn-sm fw-bold text-primary" onclick="openAddModal()">
-                            <i class="fa-solid fa-plus me-1"></i>เพิ่มช่องทางชำระเงิน
+                        <h4 class="mb-0 fw-bold fs-5 fs-md-4"><i class="fa-solid fa-wallet me-2"></i>จัดการช่องทางชำระเงิน</h4>
+                        <button class="btn btn-light btn-sm fw-bold text-primary rounded-pill px-3 shadow-sm" onclick="openAddModal()">
+                            <i class="fa-solid fa-plus me-1"></i>เพิ่มช่องทาง
                         </button>
                     </div>
-                    <div class="card-body p-4">
-                        <p class="text-muted small mb-4">คลิกปุ่ม <strong>"ตั้งเป็นช่องทางหลัก"</strong> เพื่อเลือกบัญชีที่ต้องการให้แสดงในข้อความบิลแจ้งยอด</p>
-                        <div class="row g-4" id="paymentListContainer">
-                            <div class="col-12 text-center text-muted py-4">กำลังโหลดข้อมูลช่องทางชำระเงิน...</div>
+                    <div class="card-body p-3 p-md-4">
+                        <p class="text-muted small mb-4">คลิกปุ่ม <strong>"ตั้งเป็นช่องทางหลัก"</strong> เพื่อเลือกบัญชีที่จะนำไปต่อท้ายข้อความบิลแจ้งยอด</p>
+                        <div class="row g-3 g-md-4" id="paymentListContainer">
+                            <div class="col-12 text-center text-muted py-4">กำลังโหลดข้อมูล...</div>
                         </div>
                     </div>
                 </div>
@@ -59,21 +59,21 @@
                         const title = m.type === 'bank' ? `ธนาคาร: ${m.bank_name}` : 'พร้อมเพย์ (PromptPay)';
 
                         return `
-                            <div class="col-md-6">
-                                <div class="payment-card p-4 h-100 ${isMain ? 'active-main' : ''}">
-                                    ${isMain ? '<span class="badge bg-success badge-active"><i class="fa-solid fa-check me-1"></i>ใช้งานหลักอยู่</span>' : ''}
+                            <div class="col-md-6 col-12">
+                                <div class="payment-card p-3 p-md-4 h-100 ${isMain ? 'active-main' : ''}">
+                                    ${isMain ? '<span class="badge bg-success badge-active rounded-pill"><i class="fa-solid fa-check me-1"></i>ช่องทางหลัก</span>' : ''}
                                     <div class="d-flex align-items-center mb-3">
-                                        <div class="fs-3 me-3"><i class="fa-solid ${icon}"></i></div>
+                                        <div class="fs-2 me-3"><i class="fa-solid ${icon}"></i></div>
                                         <div>
-                                            <h5 class="fw-bold mb-0">${title}</h5>
+                                            <h5 class="fw-bold mb-0 fs-6 fs-md-5">${title}</h5>
                                             <small class="text-muted">${m.type === 'bank' ? 'บัญชีธนาคาร' : 'เบอร์ / พร้อมเพย์'}</small>
                                         </div>
                                     </div>
-                                    <div class="mb-2"><strong>เลขที่บัญชี / หมายเลข:</strong> ${m.account_no}</div>
-                                    <div class="mb-3"><strong>ชื่อบัญชี:</strong> ${m.account_name}</div>
+                                    <div class="mb-2 small"><strong>เลขที่บัญชี / หมายเลข:</strong> <span class="fs-6 fw-bold text-dark">${m.account_no}</span></div>
+                                    <div class="mb-3 small"><strong>ชื่อบัญชี:</strong> ${m.account_name}</div>
                                     <div class="d-flex gap-2">
-                                        ${!isMain ? `<button class="btn btn-outline-success btn-sm flex-grow-1" onclick="setActiveMethod(${m.id})"><i class="fa-solid fa-star me-1"></i>ตั้งเป็นช่องทางหลัก</button>` : ''}
-                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteMethod(${m.id})"><i class="fa-solid fa-trash"></i></button>
+                                        ${!isMain ? `<button class="btn btn-outline-success btn-sm flex-grow-1 rounded-3" onclick="setActiveMethod(${m.id})"><i class="fa-solid fa-star me-1"></i>ตั้งเป็นช่องทางหลัก</button>` : ''}
+                                        <button class="btn btn-outline-danger btn-sm rounded-3" onclick="deleteMethod(${m.id})"><i class="fa-solid fa-trash"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -87,34 +87,32 @@
             }
         }
 
-        // เปิด Modal เพิ่มช่องทางชำระเงิน
         function openAddModal() {
             Swal.fire({
-                title: 'เพิ่มช่องทางชำระเงิน',
+                title: '<h4 class="fw-bold text-primary"><i class="fa-solid fa-plus me-2"></i>เพิ่มช่องทางชำระเงิน</h4>',
                 html: `
-                    <div class="text-start mb-3">
-                        <label class="form-label fw-bold">ประเภทช่องทาง</label>
-                        <select id="swal-type" class="form-select" onchange="toggleType(this.value)">
-                            <option value="bank">บัญชีธนาคาร</option>
-                            <option value="promptpay">พร้อมเพย์ (PromptPay)</option>
-                        </select>
-                    </div>
-                    <div class="text-start mb-3" id="bankNameGroup">
-                        <label class="form-label fw-bold">ชื่อธนาคาร</label>
+                    <div class="text-start mb-2"><label class="form-label fw-bold small">ประเภทช่องทาง</label></div>
+                    <select id="swal-type" class="form-select mb-3" onchange="toggleType(this.value)">
+                        <option value="bank">บัญชีธนาคาร</option>
+                        <option value="promptpay">พร้อมเพย์ (PromptPay)</option>
+                    </select>
+                    <div class="text-start mb-2" id="bankNameGroup">
+                        <label class="form-label fw-bold small">ชื่อธนาคาร</label>
                         <input id="swal-bankname" class="form-control" placeholder="เช่น กสิกรไทย, ไทยพาณิชย์">
                     </div>
-                    <div class="text-start mb-3">
-                        <label class="form-label fw-bold" id="labelAccNo">เลขที่บัญชี</label>
+                    <div class="text-start mb-2">
+                        <label class="form-label fw-bold small" id="labelAccNo">เลขที่บัญชี</label>
                         <input id="swal-accno" class="form-control" placeholder="เช่น 123-4-56789-0">
                     </div>
-                    <div class="text-start mb-3">
-                        <label class="form-label fw-bold">ชื่อบัญชี</label>
+                    <div class="text-start mb-2">
+                        <label class="form-label fw-bold small">ชื่อบัญชี</label>
                         <input id="swal-accname" class="form-control" placeholder="เช่น นาย สมชาย ดีใจ">
                     </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: 'บันทึก',
                 cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#0d6efd',
                 preConfirm: () => {
                     return {
                         type: document.getElementById('swal-type').value,
@@ -135,7 +133,7 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     });
-                    Swal.fire('สำเร็จ', 'เพิ่มช่องทางชำระเงินเรียบร้อยแล้ว', 'success');
+                    Swal.fire({ icon: 'success', title: 'สำเร็จ', text: 'เพิ่มช่องทางชำระเงินเรียบร้อยแล้ว', timer: 1500, showConfirmButton: false });
                     loadPaymentMethods();
                 }
             });
@@ -159,10 +157,20 @@
         }
 
         async function deleteMethod(id) {
-            if (confirm('คุณต้องการลบช่องทางชำระเงินนี้ใช่หรือไม่?')) {
-                await fetch(`/api/payment-methods/${id}`, { method: 'DELETE' });
-                loadPaymentMethods();
-            }
+            Swal.fire({
+                title: 'ยืนยันการลบ?',
+                text: 'คุณต้องการลบช่องทางชำระเงินนี้ใช่หรือไม่',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'ลบ',
+                cancelButtonText: 'ยกเลิก'
+            }).then(async (r) => {
+                if (r.isConfirmed) {
+                    await fetch(`/api/payment-methods/${id}`, { method: 'DELETE' });
+                    loadPaymentMethods();
+                }
+            });
         }
 
         loadPaymentMethods();
